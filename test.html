@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product | BettSiddy Collections</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="dark-mode">
+
+  <header>
+    <h1>BettSiddy Collections</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="jumpers.html">Jumpers</a></li>
+        <li><a href="jewelry.html">Jewelry</a></li>
+        <li><a href="bags.html">Bags</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="product-page">
+    <!-- Product Image & Details -->
+    <section class="product-container">
+      <div class="product-images">
+        <img src="images/jumper1-main.jpg" alt="Neon Knit Jumper" id="main-image" />
+        <div class="thumbnail-row">
+          <img src="images/jumper1-side.jpg" class="thumb" onclick="changeImage(this)" />
+          <img src="images/jumper1-back.jpg" class="thumb" onclick="changeImage(this)" />
+          <img src="images/jumper1-zoom.jpg" class="thumb" onclick="changeImage(this)" />
+        </div>
+      </div>
+
+      <div class="product-info">
+        <h2>Neon Knit Jumper</h2>
+        <p class="price">$35.00</p>
+        <p class="description">
+          Stay warm in style with our neon knit jumper. Crafted with premium fabric, perfect for chilly evenings and bold fashion statements.
+        </p>
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+    </section>
+
+    <!-- AI-powered Recommendations -->
+    <section class="recommendations">
+      <h3>You may also like…</h3>
+      <div class="recommend-grid">
+        <div class="rec-card">
+          <img src="images/jumper2.jpg" alt="Striped Jumper" />
+          <p>Striped Oversize Jumper</p>
+          <span>$30.00</span>
+        </div>
+        <div class="rec-card">
+          <img src="images/jumper3.jpg" alt="Cropped Jumper" />
+          <p>Cropped Neon Top</p>
+          <span>$28.00</span>
+        </div>
+        <div class="rec-card">
+          <img src="images/jewelry1.jpg" alt="Gold Hoop Earrings" />
+          <p>Gold Hoop Earrings</p>
+          <span>$22.00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="reviews">
+      <h3>Customer Reviews</h3>
+      <div class="review">
+        <p class="stars">⭐⭐⭐⭐⭐</p>
+        <p>“This jumper is fire! Super cozy and the neon color pops!” — <strong>Jess M.</strong></p>
+      </div>
+      <div class="review">
+        <p class="stars">⭐⭐⭐⭐</p>
+        <p>“Love the fit. The material is great quality.” — <strong>Leah O.</strong></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 BettSiddy Collections. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function changeImage(el) {
+      document.getElementById("main-image").src = el.src;
+    }
+  </script>
+
+</body>
+</html>

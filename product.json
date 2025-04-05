@@ -1,0 +1,60 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Classic Unisex Hoodie",
+      "price": 49.99,
+      "image": "images/hoodies/all/h1.png",
+      "category": "all"
+    },
+    {
+      "id": 2,
+      "name": "Sport Unisex Hoodie",
+      "price": 54.99,
+      "image": "images/hoodies/all/h2.png",
+      "category": "all"
+    },
+    {
+      "id": 101,
+      "name": "Men's Athletic Hoodie",
+      "price": 59.99,
+      "image": "images/hoodies/men/h1.png",
+      "category": "men"
+    },
+    {
+      "id": 102,
+      "name": "Men's Winter Hoodie",
+      "price": 64.99,
+      "image": "images/hoodies/men/h2.png",
+      "category": "men"
+    },
+    {
+      "id": 201,
+      "name": "Women's Yoga Hoodie",
+      "price": 55.99,
+      "image": "images/hoodies/women/h1.png",
+      "category": "women"
+    },
+    {
+      "id": 202,
+      "name": "Women's Cropped Hoodie",
+      "price": 49.99,
+      "image": "images/hoodies/women/h2.png",
+      "category": "women"
+    },
+    {
+      "id": 301,
+      "name": "Kids Dinosaur Hoodie",
+      "price": 39.99,
+      "image": "images/hoodies/kids/h1.png",
+      "category": "kids"
+    },
+    {
+      "id": 302,
+      "name": "Kids Rainbow Hoodie",
+      "price": 42.99,
+      "image": "images/hoodies/kids/h2.png",
+      "category": "kids"
+    }
+  ]
+}
