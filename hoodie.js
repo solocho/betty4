@@ -940,3 +940,10 @@ document.querySelectorAll('.navbar ul li a').forEach(link => {
         navbar.classList.remove('active');
     });
 });
+// Mobile search toggle
+const searchIcon = document.querySelector('.fa-search');
+const searchBox = document.querySelector('.search-box');
+
+searchIcon.addEventListener('click', () => {
+    searchBox.classList.toggle('active');
+});
