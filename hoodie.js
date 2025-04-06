@@ -127,8 +127,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Display products
     const productsContainer = document.getElementById('products-container');
     const loadMoreBtn = document.getElementById('load-more-btn');
-    let visibleProducts = 8; // Initial number of visible products
-    let allProducts = [...products]; // Copy of all products
+    let visibleProducts = 8;
+    let allProducts = [...products];
     
     function displayProducts(productsToDisplay) {
         productsContainer.innerHTML = '';
@@ -164,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.title}">
                     <div class="product-actions">
-                        <button class="action-btn quick-view" data-id="${product.id}"><i class="fas fa-eye"></i></button>
                         <button class="action-btn add-to-wishlist wishlist-btn" data-id="${product.id}"><i class="far fa-heart"></i></button>
                     </div>
                 </div>
@@ -184,10 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
             productsContainer.appendChild(productCard);
         });
         
-        // Show/hide load more button
         loadMoreBtn.style.display = visibleProducts >= productsToDisplay.length ? 'none' : 'block';
-        
-        // Initialize quick view and add to cart buttons
         initProductButtons();
     }
     
@@ -201,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const filter = this.getAttribute('data-filter');
             allProducts = filter === 'all' ? [...products] : products.filter(product => product.category === filter);
-            visibleProducts = 8; // Reset visible products when filtering
+            visibleProducts = 8;
             displayProducts(allProducts);
         });
     });
@@ -212,19 +208,8 @@ document.addEventListener('DOMContentLoaded', function() {
         displayProducts(allProducts);
     });
     
-    // Initialize product buttons (quick view and add to cart)
+    // Initialize product buttons
     function initProductButtons() {
-        // Quick view buttons
-        const quickViewBtns = document.querySelectorAll('.quick-view');
-        
-        quickViewBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const productId = parseInt(this.getAttribute('data-id'));
-                const product = products.find(p => p.id === productId);
-                openQuickView(product);
-            });
-        });
-        
         // Add to cart buttons
         const addToCartBtns = document.querySelectorAll('.add-to-cart');
         
@@ -261,35 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
-    // Quick view modal
-    const quickViewModal = document.getElementById('quick-view-modal');
-    const closeModal = document.querySelector('.close-modal');
-    
-    function openQuickView(product) {
-        document.getElementById('modal-product-title').textContent = product.title;
-        document.getElementById('modal-product-price').textContent = `ksh${product.price.toFixed(2)}`;
-        
-        if (product.oldPrice) {
-            document.getElementById('modal-product-old-price').textContent = `ksh${product.oldPrice.toFixed(2)}`;
-            document.getElementById('modal-product-discount').textContent = `${product.discount}% OFF`;
-        } else {
-            document.getElementById('modal-product-old-price').textContent = '';
-            document.getElementById('modal-product-discount').textContent = '';
-        }
-        
-        document.getElementById('modal-product-description').textContent = product.description;
-        document.getElementById('modal-main-image').src = product.image;
-        
-        // Open modal
-        quickViewModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    closeModal.addEventListener('click', function() {
-        quickViewModal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
     
     // Cart functionality
     const cartSidebar = document.querySelector('.cart-sidebar');
@@ -351,10 +307,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     <i class="fas fa-shopping-cart"></i>
                     <p>Your cart is empty</p>
                 </div>`;
-            totalPriceElement.textContent = 'ksh0.00'; // Reset total price
+            totalPriceElement.textContent = 'ksh0.00';
         } else {
             cartItemsContainer.innerHTML = '';
-            let subtotal = 0; // Initialize subtotal
+            let subtotal = 0;
             
             cart.forEach(item => {
                 const cartItem = document.createElement('div');
@@ -376,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 cartItemsContainer.appendChild(cartItem);
                 
-                // Add event listeners to quantity buttons
+                // Quantity controls
                 const decrementBtn = cartItem.querySelector('.decrement');
                 const incrementBtn = cartItem.querySelector('.increment');
                 const quantitySpan = cartItem.querySelector('.cart-item-quantity span');
@@ -404,11 +360,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     showNotification(`${item.title} removed from cart`);
                 });
                 
-                // Calculate subtotal
                 subtotal += item.price * item.quantity;
             });
             
-            totalPriceElement.textContent = `ksh${subtotal.toFixed(2)}`; // Update total price
+            totalPriceElement.textContent = `ksh${subtotal.toFixed(2)}`;
         }
     }
     
@@ -426,7 +381,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification('Your cart is empty', 'error');
         } else {
             showNotification('Proceeding to checkout...');
-            // In a real app, this would redirect to checkout page
             setTimeout(() => {
                 cart = [];
                 updateCart();
@@ -575,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!wishlist.some(item => item.id === productId)) {
             wishlist.push({
                 id: productId,
-                ...productData // Include all product data
+                ...productData
             });
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
             updateWishlistCount();
