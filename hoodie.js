@@ -2,15 +2,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
     const hamburger = document.querySelector('.hamburger');
     const navbar = document.querySelector('.navbar');
-    
+
     hamburger.addEventListener('click', function() {
         this.classList.toggle('active');
         navbar.classList.toggle('active');
     });
-    
+
     // Change header style on scroll
     const header = document.querySelector('.header');
-    
+
     window.addEventListener('scroll', function() {
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
             header.classList.remove('scrolled');
         }
     });
-    
+
     // Back to top button
     const backToTopBtn = document.querySelector('.back-to-top');
-    
+
     window.addEventListener('scroll', function() {
         if (window.scrollY > 300) {
             backToTopBtn.classList.add('active');
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             backToTopBtn.classList.remove('active');
         }
     });
-    
+
     backToTopBtn.addEventListener('click', function(e) {
         e.preventDefault();
         window.scrollTo({
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             behavior: 'smooth'
         });
     });
-    
+
     // Product data
     const products = [
         {
@@ -123,31 +123,31 @@ document.addEventListener('DOMContentLoaded', function() {
             description: "Trendy cropped hoodie that pairs perfectly with high-waisted bottoms."
         }
     ];
-    
+
     // Display products
     const productsContainer = document.getElementById('products-container');
     const loadMoreBtn = document.getElementById('load-more-btn');
     let visibleProducts = 8;
     let allProducts = [...products];
-    
+
     function displayProducts(productsToDisplay) {
         productsContainer.innerHTML = '';
-        
+
         productsToDisplay.slice(0, visibleProducts).forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
             productCard.setAttribute('data-category', product.category);
-            
+
             let discountBadge = '';
             if (product.discount) {
                 discountBadge = `<div class="product-badge">${product.discount}% OFF</div>`;
             }
-            
+
             let oldPrice = '';
             if (product.oldPrice) {
                 oldPrice = `<span class="old-price">ksh${product.oldPrice.toFixed(2)}</span>`;
             }
-            
+
             let ratingStars = '';
             for (let i = 1; i <= 5; i++) {
                 if (i <= Math.floor(product.rating)) {
@@ -158,13 +158,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     ratingStars += '<i class="far fa-star"></i>';
                 }
             }
-            
-            productCard.innerHTML = 
+
+            productCard.innerHTML =
                 `${discountBadge}
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.title}">
                     <div class="product-actions">
-                        <button class="action-btn add-to-wishlist wishlist-btn" data-id="${product.id}"><i class="far fa-heart"></i></button>
+                        <button class="action-btn add-to-wishlist wishlist-btn" data-id="${product.id}">
+                            <i class="far fa-heart"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="product-info">
@@ -177,15 +179,34 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${ratingStars}
                         <span>(${Math.floor(Math.random() * 50) + 10})</span>
                     </div>
-                    <button class="add-to-cart" data-id="${product.id}"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                    <button class="add-to-cart" data-id="${product.id}">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
                 </div>`;
-            
+
             productsContainer.appendChild(productCard);
         });
-        
+
         loadMoreBtn.style.display = visibleProducts >= productsToDisplay.length ? 'none' : 'block';
+
+        // Initialize wishlist and cart buttons
         initProductButtons();
     }
+
+    // Initial display
+    displayProducts(allProducts);
+
+    loadMoreBtn.addEventListener('click', function() {
+        visibleProducts += 4;
+        displayProducts(allProducts);
+    });
+
+    function initProductButtons() {
+        // Placeholder for future functionality
+        // e.g., add to cart or wishlist logic
+    }
+});
+
     
     // Filter products
     const filterBtns = document.querySelectorAll('.filter-btn');
