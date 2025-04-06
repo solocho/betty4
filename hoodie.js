@@ -2,15 +2,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
     const hamburger = document.querySelector('.hamburger');
     const navbar = document.querySelector('.navbar');
-
+    
     hamburger.addEventListener('click', function() {
         this.classList.toggle('active');
         navbar.classList.toggle('active');
     });
-
+    
     // Change header style on scroll
     const header = document.querySelector('.header');
-
+    
     window.addEventListener('scroll', function() {
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
             header.classList.remove('scrolled');
         }
     });
-
+    
     // Back to top button
     const backToTopBtn = document.querySelector('.back-to-top');
-
+    
     window.addEventListener('scroll', function() {
         if (window.scrollY > 300) {
             backToTopBtn.classList.add('active');
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             backToTopBtn.classList.remove('active');
         }
     });
-
+    
     backToTopBtn.addEventListener('click', function(e) {
         e.preventDefault();
         window.scrollTo({
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             behavior: 'smooth'
         });
     });
-
+    
     // Product data
     const products = [
         {
@@ -123,46 +123,31 @@ document.addEventListener('DOMContentLoaded', function() {
             description: "Trendy cropped hoodie that pairs perfectly with high-waisted bottoms."
         }
     ];
-
+    
     // Display products
     const productsContainer = document.getElementById('products-container');
     const loadMoreBtn = document.getElementById('load-more-btn');
-    let visibleProducts = 8;
-    let allProducts = [...products];
-
-    // Filter products
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    let visibleProducts = 8; // Initial number of visible products
+    let allProducts = [...products]; // Copy of all products
     
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            filterBtns.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            const filter = this.getAttribute('data-filter');
-            allProducts = filter === 'all' ? [...products] : products.filter(product => product.category === filter);
-            visibleProducts = 8;
-            displayProducts(allProducts);
-        });
-    });
-
     function displayProducts(productsToDisplay) {
         productsContainer.innerHTML = '';
-
+        
         productsToDisplay.slice(0, visibleProducts).forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
             productCard.setAttribute('data-category', product.category);
-
+            
             let discountBadge = '';
             if (product.discount) {
                 discountBadge = `<div class="product-badge">${product.discount}% OFF</div>`;
             }
-
+            
             let oldPrice = '';
             if (product.oldPrice) {
                 oldPrice = `<span class="old-price">ksh${product.oldPrice.toFixed(2)}</span>`;
             }
-
+            
             let ratingStars = '';
             for (let i = 1; i <= 5; i++) {
                 if (i <= Math.floor(product.rating)) {
@@ -173,15 +158,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     ratingStars += '<i class="far fa-star"></i>';
                 }
             }
-
-            productCard.innerHTML =
+            
+            productCard.innerHTML = 
                 `${discountBadge}
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.title}">
                     <div class="product-actions">
-                        <button class="action-btn add-to-wishlist wishlist-btn" data-id="${product.id}">
-                            <i class="far fa-heart"></i>
-                        </button>
+                        <button class="action-btn quick-view" data-id="${product.id}"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn add-to-wishlist wishlist-btn" data-id="${product.id}"><i class="far fa-heart"></i></button>
                     </div>
                 </div>
                 <div class="product-info">
@@ -194,26 +178,90 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${ratingStars}
                         <span>(${Math.floor(Math.random() * 50) + 10})</span>
                     </div>
-                    <button class="add-to-cart" data-id="${product.id}">
-                        <i class="fas fa-shopping-cart"></i> Add to Cart
-                    </button>
+                    <button class="add-to-cart" data-id="${product.id}"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
                 </div>`;
-
+            
             productsContainer.appendChild(productCard);
         });
-
+        
+        // Show/hide load more button
         loadMoreBtn.style.display = visibleProducts >= productsToDisplay.length ? 'none' : 'block';
+        
+        // Initialize quick view and add to cart buttons
         initProductButtons();
     }
-
-    // Initial display
-    displayProducts(allProducts);
-
+    
+    // Filter products
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            allProducts = filter === 'all' ? [...products] : products.filter(product => product.category === filter);
+            visibleProducts = 8; // Reset visible products when filtering
+            displayProducts(allProducts);
+        });
+    });
+    
+    // Load more products
     loadMoreBtn.addEventListener('click', function() {
         visibleProducts += 4;
         displayProducts(allProducts);
     });
-
+    
+    // Initialize product buttons (quick view and add to cart)
+    function initProductButtons() {
+        // Quick view buttons
+        const quickViewBtns = document.querySelectorAll('.quick-view');
+        
+        quickViewBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = parseInt(this.getAttribute('data-id'));
+                const product = products.find(p => p.id === productId);
+                openQuickView(product);
+            });
+        });
+        
+        // Add to cart buttons
+        const addToCartBtns = document.querySelectorAll('.add-to-cart');
+        
+        addToCartBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = parseInt(this.getAttribute('data-id'));
+                const product = products.find(p => p.id === productId);
+                addToCart(product);
+                
+                this.innerHTML = '<i class="fas fa-check"></i> Added';
+                this.style.backgroundColor = '#4CAF50';
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
+                    this.style.backgroundColor = '';
+                }, 2000);
+            });
+        });
+        
+        // Add to wishlist buttons
+        const addToWishlistBtns = document.querySelectorAll('.add-to-wishlist');
+        
+        addToWishlistBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = parseInt(this.getAttribute('data-id'));
+                const product = products.find(p => p.id === productId);
+                if (addToWishlist(productId, product)) {
+                    this.innerHTML = '<i class="fas fa-heart" style="color: red;"></i>';
+                    showNotification('Added to wishlist');
+                } else {
+                    this.innerHTML = '<i class="far fa-heart"></i>';
+                    showNotification('Removed from wishlist');
+                }
+            });
+        });
+    }
+    
     // Quick view modal
     const quickViewModal = document.getElementById('quick-view-modal');
     const closeModal = document.querySelector('.close-modal');
@@ -233,6 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modal-product-description').textContent = product.description;
         document.getElementById('modal-main-image').src = product.image;
         
+        // Open modal
         quickViewModal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -241,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
         quickViewModal.classList.remove('active');
         document.body.style.overflow = 'auto';
     });
-
+    
     // Cart functionality
     const cartSidebar = document.querySelector('.cart-sidebar');
     const cartIcon = document.querySelector('.cart-icon');
@@ -249,6 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const continueShopping = document.querySelector('.continue-shopping');
     let cart = [];
     
+    // Open/close cart
     cartIcon.addEventListener('click', function(e) {
         e.preventDefault();
         cartSidebar.classList.add('active');
@@ -265,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'auto';
     });
     
+    // Add to cart function
     function addToCart(product, quantity = 1) {
         const existingItem = cart.find(item => item.id === product.id);
         
@@ -281,27 +332,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         updateCart();
-        showNotification(`${product.title} added to cart`);
     }
     
+    // Update cart display
     function updateCart() {
         const cartItemsContainer = document.querySelector('.cart-items');
         const cartCount = document.querySelector('.cart-count');
         const totalPriceElement = document.querySelector('.total-price');
         
+        // Update cart count
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         cartCount.textContent = totalItems;
         
+        // Update cart items
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = 
                 `<div class="empty-cart">
                     <i class="fas fa-shopping-cart"></i>
                     <p>Your cart is empty</p>
                 </div>`;
-            totalPriceElement.textContent = 'ksh0.00';
+            totalPriceElement.textContent = 'ksh0.00'; // Reset total price
         } else {
             cartItemsContainer.innerHTML = '';
-            let subtotal = 0;
+            let subtotal = 0; // Initialize subtotal
             
             cart.forEach(item => {
                 const cartItem = document.createElement('div');
@@ -322,9 +375,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="remove-item" data-id="${item.id}">&times;</div>`;
                 
                 cartItemsContainer.appendChild(cartItem);
-                subtotal += item.price * item.quantity;
                 
-                // Quantity buttons
+                // Add event listeners to quantity buttons
                 const decrementBtn = cartItem.querySelector('.decrement');
                 const incrementBtn = cartItem.querySelector('.increment');
                 const quantitySpan = cartItem.querySelector('.cart-item-quantity span');
@@ -351,12 +403,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateCart();
                     showNotification(`${item.title} removed from cart`);
                 });
+                
+                // Calculate subtotal
+                subtotal += item.price * item.quantity;
             });
             
-            totalPriceElement.textContent = `ksh${subtotal.toFixed(2)}`;
+            totalPriceElement.textContent = `ksh${subtotal.toFixed(2)}`; // Update total price
         }
     }
     
+    // Update subtotal
     function updateSubtotal() {
         const totalPriceElement = document.querySelector('.total-price');
         let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -370,6 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification('Your cart is empty', 'error');
         } else {
             showNotification('Proceeding to checkout...');
+            // In a real app, this would redirect to checkout page
             setTimeout(() => {
                 cart = [];
                 updateCart();
@@ -378,13 +435,64 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 1500);
         }
     });
-
-    // Wishlist functionality
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
     
+    // Notification function
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+    
+    // Add notification styles
+    const notificationStyles = document.createElement('style');
+    notificationStyles.textContent = `
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 3000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background-color: #4CAF50;
+        }
+        
+        .notification.error {
+            background-color: #F44336;
+        }
+    `;
+    document.head.appendChild(notificationStyles);
+    
+    // Wishlist Functionality
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+    // Initialize wishlist
     function initWishlist() {
         updateWishlistCount();
         
+        // Wishlist icon click event
         document.querySelector('.wishlist-icon').addEventListener('click', function(e) {
             e.preventDefault();
             document.querySelector('.wishlist-sidebar').classList.add('active');
@@ -392,18 +500,21 @@ document.addEventListener('DOMContentLoaded', function() {
             updateWishlistDisplay();
         });
         
+        // Close wishlist
         document.querySelector('.close-wishlist').addEventListener('click', function() {
             document.querySelector('.wishlist-sidebar').classList.remove('active');
             document.body.style.overflow = 'auto';
         });
     }
 
+    // Update wishlist count display
     function updateWishlistCount() {
         const count = document.querySelector('.wishlist-count');
         count.textContent = wishlist.length;
         count.style.display = wishlist.length > 0 ? 'flex' : 'none';
     }
 
+    // Update wishlist items display
     function updateWishlistDisplay() {
         const container = document.querySelector('.wishlist-items');
         
@@ -437,6 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
             container.appendChild(wishlistItem);
         });
         
+        // Add event listeners to new elements
         document.querySelectorAll('.move-to-cart').forEach(btn => {
             btn.addEventListener('click', function() {
                 const productId = parseInt(this.dataset.id);
@@ -458,11 +570,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Add to wishlist
     function addToWishlist(productId, productData) {
         if (!wishlist.some(item => item.id === productId)) {
             wishlist.push({
                 id: productId,
-                ...productData
+                ...productData // Include all product data
             });
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
             updateWishlistCount();
@@ -471,109 +584,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     }
 
+    // Remove from wishlist
     function removeFromWishlist(productId) {
         wishlist = wishlist.filter(item => item.id !== productId);
         localStorage.setItem('wishlist', JSON.stringify(wishlist));
         updateWishlistCount();
     }
 
-    // Notification function
-    function showNotification(message, type = 'success') {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.classList.add('show');
-        }, 10);
-        
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 300);
-        }, 3000);
-    }
-
-    // Initialize product buttons
-    function initProductButtons() {
-        const quickViewBtns = document.querySelectorAll('.quick-view');
-        
-        quickViewBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const productId = parseInt(this.getAttribute('data-id'));
-                const product = products.find(p => p.id === productId);
-                openQuickView(product);
-            });
-        });
-        
-        const addToCartBtns = document.querySelectorAll('.add-to-cart');
-        
-        addToCartBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const productId = parseInt(this.getAttribute('data-id'));
-                const product = products.find(p => p.id === productId);
-                addToCart(product);
-                
-                this.innerHTML = '<i class="fas fa-check"></i> Added';
-                this.style.backgroundColor = '#4CAF50';
-                
-                setTimeout(() => {
-                    this.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
-                    this.style.backgroundColor = '';
-                }, 2000);
-            });
-        });
-        
-        const addToWishlistBtns = document.querySelectorAll('.add-to-wishlist');
-        
-        addToWishlistBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const productId = parseInt(this.getAttribute('data-id'));
-                const product = products.find(p => p.id === productId);
-                if (addToWishlist(productId, product)) {
-                    this.innerHTML = '<i class="fas fa-heart" style="color: red;"></i>';
-                    showNotification('Added to wishlist');
-                } else {
-                    this.innerHTML = '<i class="far fa-heart"></i>';
-                    showNotification('Removed from wishlist');
-                }
-            });
-        });
-    }
-
-    // Add notification styles
-    const notificationStyles = document.createElement('style');
-    notificationStyles.textContent = `
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 5px;
-            color: white;
-            font-weight: 500;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            z-index: 3000;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification.success {
-            background-color: #4CAF50;
-        }
-        
-        .notification.error {
-            background-color: #F44336;
-        }
-    `;
-    document.head.appendChild(notificationStyles);
-
-    // Initialize everything
-    initProductButtons();
+    // Initialize when DOM loads
     initWishlist();
+    displayProducts(products);
 });
