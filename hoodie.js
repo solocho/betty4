@@ -161,37 +161,25 @@ document.addEventListener('DOMContentLoaded', function() {
             
             productCard.innerHTML = 
                 `${discountBadge}
-               productCard.innerHTML = `
-    ${discountBadge ? `<span class="discount-badge">${discountBadge}</span>` : ''}
-    <div class="product-image">
-        <img src="${product.image}" alt="${product.title}">
-        <div class="product-actions">
-            <button class="action-btn quick-view" data-id="${product.id}">
-                <i class="fas fa-eye"></i>
-            </button>
-            <button class="action-btn add-to-wishlist wishlist-btn" data-id="${product.id}">
-                <i class="far fa-heart"></i>
-            </button>
-        </div>
-    </div>
-    <div class="product-info">
-        <h3 class="product-title">${product.title}</h3>
-        <div class="product-price">
-            <span class="current-price">ksh${product.price.toFixed(2)}</span>
-            ${oldPrice ? `<span class="old-price">ksh${oldPrice}</span>` : ''}
-        </div>
-        <div class="product-rating">
-            ${ratingStars ? ratingStars : '<span>No rating</span>'}
-            <span>(${Math.floor(Math.random() * 50) + 10})</span>
-        </div>
-        <button class="add-to-cart" data-id="${product.id}">
-            <i class="fas fa-shopping-cart"></i> Add to Cart
-        </button>
-    </div>
-`;
-
-productsContainer.appendChild(productCard);
-
+                <div class="product-image">
+                    <img src="${product.image}" alt="${product.title}">
+                    <div class="product-actions">
+                        <button class="action-btn quick-view" data-id="${product.id}"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn add-to-wishlist wishlist-btn" data-id="${product.id}"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">${product.title}</h3>
+                    <div class="product-price">
+                        <span class="current-price">ksh${product.price.toFixed(2)}</span>
+                        ${oldPrice}
+                    </div>
+                    <div class="product-rating">
+                        ${ratingStars}
+                        <span>(${Math.floor(Math.random() * 50) + 10})</span>
+                    </div>
+                    <button class="add-to-cart" data-id="${product.id}"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                </div>`;
             
             productsContainer.appendChild(productCard);
         });
