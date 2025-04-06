@@ -127,8 +127,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Display products
     const productsContainer = document.getElementById('products-container');
     const loadMoreBtn = document.getElementById('load-more-btn');
-    let visibleProducts = 8; // Initial number of visible products
-    let allProducts = [...products]; // Copy of all products
+    let visibleProducts = 8;
+    let allProducts = [...products];
     
     function displayProducts(productsToDisplay) {
         productsContainer.innerHTML = '';
@@ -164,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.title}">
                     <div class="product-actions">
-                        <!-- REMOVED: Quick view button (eye icon) -->
                         <button class="action-btn add-to-wishlist wishlist-btn" data-id="${product.id}"><i class="far fa-heart"></i></button>
                     </div>
                 </div>
@@ -184,10 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
             productsContainer.appendChild(productCard);
         });
         
-        // Show/hide load more button
         loadMoreBtn.style.display = visibleProducts >= productsToDisplay.length ? 'none' : 'block';
-        
-        // Initialize add to cart and wishlist buttons
         initProductButtons();
     }
     
@@ -201,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const filter = this.getAttribute('data-filter');
             allProducts = filter === 'all' ? [...products] : products.filter(product => product.category === filter);
-            visibleProducts = 8; // Reset visible products when filtering
+            visibleProducts = 8;
             displayProducts(allProducts);
         });
     });
@@ -212,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         displayProducts(allProducts);
     });
     
-    // Initialize product buttons (add to cart and wishlist)
+    // Initialize product buttons
     function initProductButtons() {
         // Add to cart buttons
         const addToCartBtns = document.querySelectorAll('.add-to-cart');
@@ -300,21 +296,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const cartCount = document.querySelector('.cart-count');
         const totalPriceElement = document.querySelector('.total-price');
         
-        // Update cart count
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         cartCount.textContent = totalItems;
         
-        // Update cart items
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = 
                 `<div class="empty-cart">
                     <i class="fas fa-shopping-cart"></i>
                     <p>Your cart is empty</p>
                 </div>`;
-            totalPriceElement.textContent = 'ksh0.00'; // Reset total price
+            totalPriceElement.textContent = 'ksh0.00';
         } else {
             cartItemsContainer.innerHTML = '';
-            let subtotal = 0; // Initialize subtotal
+            let subtotal = 0;
             
             cart.forEach(item => {
                 const cartItem = document.createElement('div');
@@ -336,7 +330,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 cartItemsContainer.appendChild(cartItem);
                 
-                // Add event listeners to quantity buttons
                 const decrementBtn = cartItem.querySelector('.decrement');
                 const incrementBtn = cartItem.querySelector('.increment');
                 const quantitySpan = cartItem.querySelector('.cart-item-quantity span');
@@ -364,11 +357,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     showNotification(`${item.title} removed from cart`);
                 });
                 
-                // Calculate subtotal
                 subtotal += item.price * item.quantity;
             });
             
-            totalPriceElement.textContent = `ksh${subtotal.toFixed(2)}`; // Update total price
+            totalPriceElement.textContent = `ksh${subtotal.toFixed(2)}`;
         }
     }
     
@@ -386,7 +378,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification('Your cart is empty', 'error');
         } else {
             showNotification('Proceeding to checkout...');
-            // In a real app, this would redirect to checkout page
             setTimeout(() => {
                 cart = [];
                 updateCart();
@@ -448,11 +439,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Wishlist Functionality
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-    // Initialize wishlist
     function initWishlist() {
         updateWishlistCount();
         
-        // Wishlist icon click event
         document.querySelector('.wishlist-icon').addEventListener('click', function(e) {
             e.preventDefault();
             document.querySelector('.wishlist-sidebar').classList.add('active');
@@ -460,21 +449,18 @@ document.addEventListener('DOMContentLoaded', function() {
             updateWishlistDisplay();
         });
         
-        // Close wishlist
         document.querySelector('.close-wishlist').addEventListener('click', function() {
             document.querySelector('.wishlist-sidebar').classList.remove('active');
             document.body.style.overflow = 'auto';
         });
     }
 
-    // Update wishlist count display
     function updateWishlistCount() {
         const count = document.querySelector('.wishlist-count');
         count.textContent = wishlist.length;
         count.style.display = wishlist.length > 0 ? 'flex' : 'none';
     }
 
-    // Update wishlist items display
     function updateWishlistDisplay() {
         const container = document.querySelector('.wishlist-items');
         
@@ -508,7 +494,6 @@ document.addEventListener('DOMContentLoaded', function() {
             container.appendChild(wishlistItem);
         });
         
-        // Add event listeners to new elements
         document.querySelectorAll('.move-to-cart').forEach(btn => {
             btn.addEventListener('click', function() {
                 const productId = parseInt(this.dataset.id);
@@ -530,12 +515,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add to wishlist
     function addToWishlist(productId, productData) {
         if (!wishlist.some(item => item.id === productId)) {
             wishlist.push({
                 id: productId,
-                ...productData // Include all product data
+                ...productData
             });
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
             updateWishlistCount();
@@ -544,14 +528,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     }
 
-    // Remove from wishlist
     function removeFromWishlist(productId) {
         wishlist = wishlist.filter(item => item.id !== productId);
         localStorage.setItem('wishlist', JSON.stringify(wishlist));
         updateWishlistCount();
     }
 
-    // Initialize when DOM loads
+    // Initialize
     initWishlist();
     displayProducts(products);
 });
