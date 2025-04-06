@@ -161,12 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             productCard.innerHTML = 
                 `${discountBadge}
-                <div class="product-image">
-                    <img src="${product.image}" alt="${product.title}">
-                    <div class="product-actions">
-                        <button class="action-btn quick-view" data-id="${product.id}"><i class="fas fa-eye"></i></button>
-                        <button class="action-btn add-to-wishlist wishlist-btn" data-id="${product.id}"><i class="far fa-heart"></i></button>
-                    </div>
+                
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">${product.title}</h3>
