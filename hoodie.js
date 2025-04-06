@@ -926,3 +926,17 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCartItems();
     renderWishlistItems();
 });
+// Mobile menu toggle
+const hamburger = document.querySelector('.hamburger');
+const navbar = document.querySelector('.navbar');
+
+hamburger.addEventListener('click', () => {
+    navbar.classList.toggle('active');
+});
+
+// Close mobile menu when clicking a link
+document.querySelectorAll('.navbar ul li a').forEach(link => {
+    link.addEventListener('click', () => {
+        navbar.classList.remove('active');
+    });
+});
