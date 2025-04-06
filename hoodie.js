@@ -595,3 +595,334 @@ document.addEventListener('DOMContentLoaded', function() {
     initWishlist();
     displayProducts(products);
 });
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile Menu Toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navbar = document.querySelector('.navbar');
+    
+    hamburger.addEventListener('click', function() {
+        navbar.classList.toggle('active');
+        this.classList.toggle('fa-times');
+        this.classList.toggle('fa-bars');
+    });
+    
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.navbar ul li a').forEach(link => {
+        link.addEventListener('click', () => {
+            navbar.classList.remove('active');
+            hamburger.classList.remove('fa-times');
+            hamburger.classList.add('fa-bars');
+        });
+    });
+    
+    // Cart and Wishlist Toggle
+    const cartIcon = document.querySelector('.cart-icon');
+    const wishlistIcon = document.querySelector('.wishlist-icon');
+    const cartSidebar = document.querySelector('.cart-sidebar');
+    const wishlistSidebar = document.querySelector('.wishlist-sidebar');
+    
+    cartIcon.addEventListener('click', function(e) {
+        e.preventDefault();
+        cartSidebar.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    wishlistIcon.addEventListener('click', function(e) {
+        e.preventDefault();
+        wishlistSidebar.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    document.querySelector('.close-cart').addEventListener('click', function() {
+        cartSidebar.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    document.querySelector('.close-wishlist').addEventListener('click', function() {
+        wishlistSidebar.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Close sidebars when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.cart-sidebar') && !e.target.closest('.cart-icon')) {
+            cartSidebar.classList.remove('active');
+        }
+        if (!e.target.closest('.wishlist-sidebar') && !e.target.closest('.wishlist-icon')) {
+            wishlistSidebar.classList.remove('active');
+        }
+    });
+    
+    // Modal functionality
+    const modal = document.getElementById('quick-view-modal');
+    const closeModal = document.querySelector('.close-modal');
+    const modalOverlay = document.querySelector('.modal-overlay');
+    
+    // Open modal when clicking "View" button on products
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productCard = this.closest('.product-card');
+            const productId = productCard.dataset.id;
+            const productTitle = productCard.querySelector('.product-title').textContent;
+            const productPrice = productCard.querySelector('.price').textContent;
+            const productImage = productCard.querySelector('.product-image img').src;
+            
+            // Set modal content
+            document.getElementById('modal-product-title').textContent = productTitle;
+            document.getElementById('modal-product-price').textContent = productPrice;
+            document.getElementById('modal-main-image').src = productImage;
+            
+            // Show modal
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+    });
+    
+    // Close modal
+    closeModal.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
+    
+    modalOverlay.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Quantity controls
+    const quantityInput = document.getElementById('product-quantity');
+    document.querySelector('.quantity-plus').addEventListener('click', function() {
+        let value = parseInt(quantityInput.value);
+        if (value < 10) {
+            quantityInput.value = value + 1;
+        }
+    });
+    
+    document.querySelector('.quantity-minus').addEventListener('click', function() {
+        let value = parseInt(quantityInput.value);
+        if (value > 1) {
+            quantityInput.value = value - 1;
+        }
+    });
+    
+    // Size selection
+    document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelector('.size-error').style.display = 'none';
+        });
+    });
+    
+    // Color selection
+    document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Add to Cart functionality
+    document.querySelector('.add-to-cart').addEventListener('click', function() {
+        const selectedSize = document.querySelector('.size-btn.active');
+        if (!selectedSize) {
+            document.querySelector('.size-error').style.display = 'block';
+            return;
+        }
+        
+        const product = {
+            id: Date.now(), // You should use actual product ID
+            title: document.getElementById('modal-product-title').textContent,
+            price: document.getElementById('modal-product-price').textContent,
+            image: document.getElementById('modal-main-image').src,
+            size: selectedSize.dataset.size,
+            color: document.querySelector('.color-btn.active').dataset.color,
+            quantity: parseInt(quantityInput.value)
+        };
+        
+        addToCart(product);
+        updateCartCount();
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        
+        // Show success message
+        alert(`${product.title} (${product.size}) has been added to your cart!`);
+    });
+    
+    // Add to Wishlist functionality
+    document.querySelector('.move-to-wishlist').addEventListener('click', function() {
+        const selectedSize = document.querySelector('.size-btn.active');
+        if (!selectedSize) {
+            document.querySelector('.size-error').style.display = 'block';
+            return;
+        }
+        
+        const product = {
+            id: Date.now(), // You should use actual product ID
+            title: document.getElementById('modal-product-title').textContent,
+            price: document.getElementById('modal-product-price').textContent,
+            image: document.getElementById('modal-main-image').src,
+            size: selectedSize.dataset.size,
+            color: document.querySelector('.color-btn.active').dataset.color
+        };
+        
+        addToWishlist(product);
+        updateWishlistCount();
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        
+        // Show success message
+        alert(`${product.title} has been added to your wishlist!`);
+    });
+    
+    // Cart and Wishlist functions
+    let cart = [];
+    let wishlist = [];
+    
+    function addToCart(product) {
+        cart.push(product);
+        renderCartItems();
+    }
+    
+    function addToWishlist(product) {
+        wishlist.push(product);
+        renderWishlistItems();
+    }
+    
+    function updateCartCount() {
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        document.querySelector('.cart-count').textContent = totalItems;
+    }
+    
+    function updateWishlistCount() {
+        document.querySelector('.wishlist-count').textContent = wishlist.length;
+    }
+    
+    function renderCartItems() {
+        const cartItemsContainer = document.querySelector('.cart-items');
+        
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = `
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Your cart is empty</p>
+                </div>
+            `;
+            document.querySelector('.total-price').textContent = '$0.00';
+            return;
+        }
+        
+        let html = '';
+        let total = 0;
+        
+        cart.forEach(item => {
+            const itemTotal = parseFloat(item.price.replace('$', '')) * item.quantity;
+            total += itemTotal;
+            
+            html += `
+                <div class="cart-item" data-id="${item.id}">
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.title}">
+                    </div>
+                    <div class="cart-item-details">
+                        <h4>${item.title}</h4>
+                        <p>Size: ${item.size} | Color: ${item.color}</p>
+                        <div class="cart-item-price">
+                            <span>${item.price} x ${item.quantity}</span>
+                            <span class="item-total">$${itemTotal.toFixed(2)}</span>
+                        </div>
+                        <div class="cart-item-actions">
+                            <button class="remove-item"><i class="fas fa-trash"></i> Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        cartItemsContainer.innerHTML = html;
+        document.querySelector('.total-price').textContent = `$${total.toFixed(2)}`;
+        
+        // Add event listeners to remove buttons
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const itemId = this.closest('.cart-item').dataset.id;
+                cart = cart.filter(item => item.id != itemId);
+                renderCartItems();
+                updateCartCount();
+            });
+        });
+    }
+    
+    function renderWishlistItems() {
+        const wishlistItemsContainer = document.querySelector('.wishlist-items');
+        
+        if (wishlist.length === 0) {
+            wishlistItemsContainer.innerHTML = `
+                <div class="empty-wishlist">
+                    <i class="far fa-heart"></i>
+                    <p>Your wishlist is empty</p>
+                </div>
+            `;
+            return;
+        }
+        
+        let html = '';
+        
+        wishlist.forEach(item => {
+            html += `
+                <div class="wishlist-item" data-id="${item.id}">
+                    <div class="wishlist-item-image">
+                        <img src="${item.image}" alt="${item.title}">
+                    </div>
+                    <div class="wishlist-item-details">
+                        <h4>${item.title}</h4>
+                        <p>Size: ${item.size} | Color: ${item.color}</p>
+                        <div class="wishlist-item-price">
+                            <span>${item.price}</span>
+                        </div>
+                        <div class="wishlist-item-actions">
+                            <button class="move-to-cart">Add to Cart</button>
+                            <button class="remove-wishlist-item"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        wishlistItemsContainer.innerHTML = html;
+        
+        // Add event listeners to wishlist buttons
+        document.querySelectorAll('.move-to-cart').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const itemId = this.closest('.wishlist-item').dataset.id;
+                const item = wishlist.find(item => item.id == itemId);
+                addToCart({...item, quantity: 1});
+                wishlist = wishlist.filter(item => item.id != itemId);
+                renderWishlistItems();
+                updateWishlistCount();
+                updateCartCount();
+            });
+        });
+        
+        document.querySelectorAll('.remove-wishlist-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const itemId = this.closest('.wishlist-item').dataset.id;
+                wishlist = wishlist.filter(item => item.id != itemId);
+                renderWishlistItems();
+                updateWishlistCount();
+            });
+        });
+    }
+    
+    // Initialize
+    renderCartItems();
+    renderWishlistItems();
+});
