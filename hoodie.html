@@ -258,16 +258,76 @@
         </div>
     </footer>
 
-    <!-- Quick View Modal -->
-    <div class="modal" id="quick-view-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-product-details">
-                <div class="modal-product-images">
-                    <div class="main-image">
-                        <img id="modal-main-image" src="" alt="Product">
+    <!-- Updated Quick View Modal -->
+<div class="modal" id="quick-view-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-product-details">
+            <div class="modal-product-images">
+                <div class="main-image">
+                    <img id="modal-main-image" src="" alt="Product">
+                </div>
+                <div class="thumbnail-images">
+                    <!-- Thumbnails will be added here dynamically -->
+                </div>
+            </div>
+            <div class="modal-product-info">
+                <h2 id="modal-product-title"></h2>
+                <div class="price">
+                    <span id="modal-product-price" class="current-price"></span>
+                    <span id="modal-product-old-price" class="old-price"></span>
+                    <span id="modal-product-discount" class="discount"></span>
+                </div>
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <span class="review-count">(24 Reviews)</span>
+                </div>
+                <p id="modal-product-description"></p>
+                
+                <div class="size-selector">
+                    <h4>Size:</h4>
+                    <div class="sizes">
+                        <button class="size-btn" data-size="XS">XS</button>
+                        <button class="size-btn" data-size="S">S</button>
+                        <button class="size-btn" data-size="M">M</button>
+                        <button class="size-btn" data-size="L">L</button>
+                        <button class="size-btn" data-size="XL">XL</button>
                     </div>
-                    <div class="thumbnail-images">
+                    <p class="size-error" style="color: red; display: none;">Please select a size</p>
+                </div>
+                
+                <div class="color-selector">
+                    <h4>Color:</h4>
+                    <div class="colors">
+                        <button class="color-btn" data-color="Black" style="background-color: #000;"></button>
+                        <button class="color-btn" data-color="Blue" style="background-color: #3a86ff;"></button>
+                        <button class="color-btn" data-color="Pink" style="background-color: #ff006e;"></button>
+                        <button class="color-btn" data-color="Purple" style="background-color: #8338ec;"></button>
+                    </div>
+                </div>
+                
+                <div class="quantity-selector">
+                    <h4>Quantity:</h4>
+                    <div class="quantity-control">
+                        <button class="quantity-minus"><i class="fas fa-minus"></i></button>
+                        <input type="number" id="product-quantity" value="1" min="1" max="10">
+                        <button class="quantity-plus"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                
+                <div class="modal-btns">
+                    <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                    <button class="btn btn-secondary move-to-wishlist">Add to Wishlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                         <!-- Thumbnails will be added here -->
                     </div>
                 </div>
@@ -367,6 +427,6 @@
     <button class="back-to-top"><i class="fas fa-arrow-up"></i></button>
 
     <script src="hoodie.js"></script>
-    
+    <script src="test2.js"></script>
 </body>
 </html>
