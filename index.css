@@ -1157,3 +1157,11 @@ button:hover {
         text-align: center;
     }
 }
+button, a {
+    touch-action: manipulation;
+}
+@media (max-width: 480px) {
+    html {
+        font-size: 14px;
+    }
+}
